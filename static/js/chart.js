@@ -4,17 +4,14 @@ var chart; // global
          * Request data from the server, add it to the graph and set a timeout to request again
          */
         function requestData() {
-	  if(chart !== undefined) {
-		var series = chart.series[0],
-	    shift = series.data.length > 20; // shift if the series is longer than 20
-
-		// add the point
-		var point = 2;
-		chart.series[0].addPoint(eval(point), true, shift);
-
-		// call it again after one second
-		setTimeout(requestData, 1000);
-} else {  setTimeout(requestData, 1000); }
+          var socket = io.connect('http://localhost:9000');
+          socket.on('tail', function (data) {
+	    if(chart !== undefined) {
+	      var series = chart.series[0], shift = series.data.length > 20; // shift if the series is longer than 20
+     	      var point = 2;
+              chart.series[0].addPoint(eval(point), true, shift);
+            } 
+          });
 	}
 
         $(document).ready(function() {
